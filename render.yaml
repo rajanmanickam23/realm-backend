@@ -7,9 +7,10 @@ databases:
 services:
   - type: web
     name: realm-backend
-    env: docker
+    env: java
     plan: free
-    healthCheckPath: /actuator/health
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:postgresql://${realm-db.host}:${realm-db.port}/${realm-db.databaseName}
@@ -21,3 +22,5 @@ services:
         fromDatabase:
           name: realm-db
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
