@@ -1,26 +1,24 @@
 databases:
   - name: realm-db
-    databaseName: realm_solutions_db
-    user: postgres
-    plan: free
+      plan: free
 
-services:
-  - type: web
-    name: realm-backend
-    env: java
-    plan: free
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
-    envVars:
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${realm-db.host}:${realm-db.port}/${realm-db.databaseName}
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: realm-db
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: realm-db
-          property: password
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
+      services:
+        - type: web
+            name: realm-backend
+                env: docker
+                    plan: free
+                        healthCheckPath: /actuator/health
+                            envVars:
+                                  - key: SPRING_DATASOURCE_URL
+                                          value: jdbc:postgresql://${realm-db.host}:${realm-db.port}/${realm-db.databaseName}
+                                                - key: SPRING_DATASOURCE_USERNAME
+                                                        fromDatabase:
+                                                                  name: realm-db
+                                                                            property: user
+                                                                                  - key: SPRING_DATASOURCE_PASSWORD
+                                                                                          fromDatabase:
+                                                                                                    name: realm-db
+                                                                                                              property: password
+                                                                                                                    - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+                                                                                                                            value: update
+                                                                                                                            
